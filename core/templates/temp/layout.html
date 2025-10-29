@@ -1,0 +1,313 @@
+{% load static %} 
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>UNICAL - Student Attendance System</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <!-- AOS Animation CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'attend/main.css' %}">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{% static 'attend/unical-logo.png' %}">
+  </head>
+  
+  <body>
+    <!-- Enhanced Navigation -->
+<header>
+  <div class="container-fluid">
+    <nav class="navbar navbar-expand-lg">
+      <div class="container-fluid">
+        <!-- Logo -->
+        <a href="{% url 'home' %}" class="navbar-brand d-flex align-items-center">
+          <img src="{% static 'attend/unical-logo.png' %}" alt="Unical Logo" width="45" height="45" class="me-2">
+          <span class="fw-bold text-white">UNIVERSITY OF CALABAR</span>
+          </a>
+
+        <!-- Toggler for mobile -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Navigation Links -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav mx-auto">
+            <li class="nav-item">
+              <a href="{% url 'home' %}" class="nav-link px-3">
+                <i class="bi bi-house-door me-1"></i>Home
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'calendar' %}" class="nav-link px-3">
+                <i class="bi bi-calendar3 me-1"></i>Calendar
+              </a>
+            </li>
+            
+            <!-- Results Dropdown -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle px-3" href="{% url 'results' %}" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-clipboard-data me-1"></i>Results
+              </a>
+              <ul class="dropdown-menu">
+                <!-- <li>
+                  <a class="dropdown-item" href="{% url 'results' %}">
+                    <i class="bi bi-file-earmark-text me-2"></i>View Results
+                  </a>
+                </li> -->
+                <li>
+                  <a class="dropdown-item" href="#">
+                    <i class="bi bi-graph-up-arrow me-2"></i>Analytics
+                  </a>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                  <a class="dropdown-item" href="#">
+                    <i class="bi bi-file-earmark-pdf me-2"></i>Generate Report
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="#">
+                    <i class="bi bi-download me-2"></i>Export Data
+                  </a>
+                </li>
+              </ul>
+            </li>
+            
+            <!-- MBBCH Courses Dropdown -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle px-3" href="{% url 'courses' %}" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-mortarboard me-1"></i>MBBCH COURSES
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'M_Chemical_Pathology' %}">
+                  <i class="bi bi-flask me-2"></i>Chemical Pathology
+                </a></li>
+                <li><a class="dropdown-item" href="{% url 'M_Microbiology' %}">
+                  <i class="bi bi-virus me-2"></i>Microbiology
+                </a></li>
+                <li><a class="dropdown-item" href="{% url 'M_Pharmacology' %}">
+                  <i class="bi bi-capsule me-2"></i>Pharmacology
+                </a></li>
+                <li><a class="dropdown-item" href="{% url 'M_Hematology' %}">
+                  <i class="bi bi-droplet me-2"></i>Hematology
+                </a></li>
+              </ul>
+            </li>
+            
+            <!-- BDS Courses Dropdown -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle px-3" href="{% url 'bds_courses' %}" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-teeth me-1"></i>BDS COURSES
+              </a>
+             
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">
+                  <i class="bi bi-clipboard2-pulse me-2"></i>Oral Pathology
+                </a></li>
+                <li><a class="dropdown-item" href="#">
+                  <i class="bi bi-bandaid me-2"></i>Oral Surgery
+                </a></li>
+                <li><a class="dropdown-item" href="#">
+                  <i class="bi bi-grid-3x3 me-2"></i>Orthodontics
+                </a></li>
+                <li><a class="dropdown-item" href="#">
+                  <i class="bi bi-heart-pulse me-2"></i>Periodontology
+                </a></li>
+              </ul>
+            </li>
+          </ul>
+
+          <!-- Auth Buttons -->
+          <div class="d-flex">
+            <!-- <button type="button" class="btn btn-outline-primary me-2">
+              <i class="bi bi-box-arrow-in-right me-1"></i>Login
+            </button> -->
+          </div>
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>
+
+    <!-- Alert Messages -->
+    {% if messages %}
+      <div class="container mt-3">
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            <i class="bi bi-info-circle me-2"></i>{{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <!-- Main Content -->
+    <main>
+      {% block content %}{% endblock %}
+    </main>
+
+    <!-- Enhanced Footer -->
+    <footer class="footer mt-5">
+      <div class="container text-center">
+        <div class="mb-4" data-aos="zoom-in">
+          <img src="{% static 'attend/unical-logo.png' %}" alt="Unical Logo" width="70" height="70">
+        </div>
+        
+        <h5 class="fw-bold mb-3" data-aos="fade-up">University of Calabar</h5>
+        <p class="mb-2" data-aos="fade-up" data-aos-delay="100">Faculty of Basic Clinical Sciences</p>
+        <p class="mb-4" data-aos="fade-up" data-aos-delay="200">&copy; {{ now|date:"Y" }} All Rights Reserved</p>
+        
+        <!-- Social Links -->
+        <div class="social-links mb-4" data-aos="fade-up" data-aos-delay="300">
+          <a href="#" aria-label="Facebook">
+            <i class="bi bi-facebook"></i>
+          </a>
+          <a href="#" aria-label="Twitter">
+            <i class="bi bi-twitter-x"></i>
+          </a>
+          <a href="#" aria-label="Instagram">
+            <i class="bi bi-instagram"></i>
+          </a>
+          <a href="#" aria-label="LinkedIn">
+            <i class="bi bi-linkedin"></i>
+          </a>
+        </div>
+        
+        <!-- Quick Links -->
+        <div class="footer-links mb-3" data-aos="fade-up" data-aos-delay="400">
+          <a href="#">About Us</a>
+          <span class="mx-2">|</span>
+          <a href="#">Contact</a>
+          <span class="mx-2">|</span>
+          <a href="#">Privacy Policy</a>
+          <span class="mx-2">|</span>
+          <a href="#">Terms of Service</a>
+        </div>
+        
+        <p class="text-muted small">
+          <i class="bi bi-code-slash me-1"></i>
+          Designed & Developed by <span class="fw-bold">Salems Academy</span>
+        </p>
+      </div>
+    </footer>
+
+    <!-- Bootstrap JS Bundle - MUST BE LOADED FIRST -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    
+    <!-- AOS Animation JS -->
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    
+    <script>
+      // Initialize AOS
+      AOS.init({
+        duration: 1000,
+        once: true,
+        offset: 100
+      });
+
+      // Active nav link highlighting
+      document.addEventListener("DOMContentLoaded", function() {
+        const currentPath = window.location.pathname;
+        const navLinks = document.querySelectorAll('.nav-link');
+        
+        navLinks.forEach(link => {
+          const href = link.getAttribute('href');
+          if (href === currentPath || (href !== '#' && currentPath.includes(href) && href !== '/')) {
+            link.classList.add('active');
+          }
+        });
+      });
+
+      // Smooth scroll for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          const href = this.getAttribute('href');
+          if (href !== '#' && href.length > 1) {
+            e.preventDefault();
+            const target = document.querySelector(href);
+            if (target) {
+              target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+              });
+            }
+          }
+        });
+      });
+    </script>
+
+    <style>
+      /* Additional footer styles */
+      .social-links a {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        color: white;
+        font-size: 1.2rem;
+        margin: 0 8px;
+        transition: all 0.3s ease;
+      }
+
+      .social-links a:hover {
+        background: var(--accent-gold);
+        color: var(--primary-blue);
+        transform: translateY(-5px) rotate(360deg);
+      }
+
+      .footer-links a {
+        color: rgba(255, 255, 255, 0.8);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+      }
+
+      .footer-links a:hover {
+        color: var(--accent-gold);
+        text-decoration: underline;
+      }
+
+      /* Active nav link */
+      .nav-link.active {
+        background: rgba(255, 255, 255, 0.15);
+        color: var(--accent-gold) !important;
+        border-radius: 8px;
+      }
+
+      /* Ensure dropdown works properly */
+      .dropdown-menu {
+        animation: dropdownFade 0.3s ease;
+      }
+
+      @keyframes dropdownFade {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      
+      /* Fix dropdown positioning */
+      .dropdown-menu {
+        position: absolute;
+        z-index: 1050;
+      }
+    </style>
+  </body>
+</html>

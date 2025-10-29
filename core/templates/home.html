@@ -1,0 +1,200 @@
+{% extends "temp/layout.html" %}
+
+{% block content %}
+<!-- Enhanced Hero Section -->
+ 
+<div class="hero text-center ">
+  <div class="hero-content">
+    <h1 class="transparent-text">University of Calabar</h1>
+    <p class="lead animate-slide-up">Faculty of Basic Clinical Sciences - Student Attendance Register</p>
+    <div class="mt-4">
+      <a href="{% url 'view_results' %}" class="btn btn-hero btn-lg animate-bounce">
+        <i class="bi bi-calendar-check me-2"></i>View Results
+      </a>
+       
+    </div>
+  </div>
+</div>
+
+
+<!-- Main Content Card -->
+<div class="container my-5">
+  <div class="card shadow-lg p-5 text-center animate-fade-up">
+    <div class="mb-4">
+      <i class="bi bi-journal-check" style="font-size: 3rem; color: #003366;"></i>
+    </div>
+    <h2 class="fw-bold mb-4">FBCS Students' Register</h2>
+    <p class="text-muted mb-4">
+      Welcome to the official attendance management system for the Faculty of Basic Clinical Sciences. 
+      Track your attendance, view schedules, and stay updated with your academic progress.
+    </p>
+    
+    <!-- Quick Stats -->
+    <div class="row mt-5">
+      <div class="col-md-4 mb-3">
+        <div class="stat-box">
+          <i class="bi bi-people-fill" style="font-size: 2rem; color: #8B4513;"></i>
+          <h4 class="mt-2">500+</h4>
+          <p class="text-muted">Active Students</p>
+        </div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <div class="stat-box">
+          <i class="bi bi-book-fill" style="font-size: 2rem; color: #003366;"></i>
+          <h4 class="mt-2">15+</h4>
+          <p class="text-muted">Courses</p>
+        </div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <div class="stat-box">
+          <i class="bi bi-award-fill" style="font-size: 2rem; color: #FFD700;"></i>
+          <h4 class="mt-2">98%</h4>
+          <p class="text-muted">Success Rate</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Features Section -->
+<div class="container my-5">
+  <h2 class="text-center fw-bold mb-5" style="color: #003366;">System Features</h2>
+  <div class="row g-4">
+    <div class="col-md-4">
+      <div class="feature-card text-center p-4">
+        <div class="feature-icon mb-3">
+          <i class="bi bi-calendar-event" style="font-size: 2.5rem; color: #8B4513;"></i>
+        </div>
+        <h5 class="fw-bold">Smart Calendar</h5>
+        <p class="text-muted">Insert all classes held at the end of each month</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="feature-card text-center p-4">
+        <div class="feature-icon mb-3">
+          <i class="bi bi-graph-up-arrow" style="font-size: 2.5rem; color: #003366;"></i>
+        </div>
+        <h5 class="fw-bold">Real-time Analytics</h5>
+        <p class="text-muted">Track your students attendance for each month</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="feature-card text-center p-4">
+        <div class="feature-icon mb-3">
+          <i class="bi bi-bell-fill" style="font-size: 2.5rem; color: #FFD700;"></i>
+        </div>
+        <h5 class="fw-bold">Notifications</h5>
+        <p class="text-muted">Get instant email for monthly attendance results</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Call to Action -->
+<div class="container my-5">
+  <div class="cta-card text-center p-5">
+    <h3 class="fw-bold mb-3">Ready to Get Started?</h3>
+    <p class="lead mb-4">Join hundreds of students managing their attendance efficiently</p>
+    <div class="d-flex justify-content-center gap-3">
+      <!-- <a href="#" class="btn btn-lg btn-primary">Login Now</a> -->
+      <a href="{% url 'calendar' %}" class="btn btn-lg btn-outline-primary">Explore Calendar</a>
+    </div>
+  </div>
+</div>
+
+<!-- Scroll to Top Button -->
+<div class="scroll-to-top" id="scrollToTop">
+  <i class="bi bi-arrow-up" style="font-size: 1.5rem;"></i>
+</div>
+
+<style>
+/* Additional styles for new elements */
+.stat-box {
+  padding: 20px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.stat-box:hover {
+  transform: translateY(-5px);
+  background: rgba(0, 51, 102, 0.05);
+}
+
+.feature-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  transition: all 0.4s ease;
+  border: 2px solid transparent;
+}
+
+.feature-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 12px 30px rgba(0, 51, 102, 0.2);
+  border-color: #8B4513;
+}
+
+.feature-icon {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.cta-card {
+  background: linear-gradient(135deg, #003366, #8B4513);
+  color: white;
+  border-radius: 24px;
+  box-shadow: 0 10px 40px rgba(0, 51, 102, 0.3);
+}
+
+.cta-card .btn-primary {
+  background: white;
+  color: #003366;
+  border: none;
+  font-weight: 700;
+}
+
+.cta-card .btn-primary:hover {
+  background: #FFD700;
+  color: #003366;
+  transform: translateY(-3px);
+}
+
+.cta-card .btn-outline-primary {
+  border: 2px solid white;
+  color: white;
+}
+
+.cta-card .btn-outline-primary:hover {
+  background: white;
+  color: #003366;
+  transform: translateY(-3px);
+}
+</style>
+
+<script>
+// Scroll to top functionality
+document.addEventListener('DOMContentLoaded', function() {
+  const scrollBtn = document.getElementById('scrollToTop');
+  
+  window.addEventListener('scroll', function() {
+    if (window.pageYOffset > 300) {
+      scrollBtn.classList.add('visible');
+    } else {
+      scrollBtn.classList.remove('visible');
+    }
+  });
+  
+  scrollBtn.addEventListener('click', function() {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  });
+});
+</script>
+{% endblock %}
