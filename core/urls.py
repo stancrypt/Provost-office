@@ -10,4 +10,8 @@ urlpatterns = [
     path('logout/', CustomLogoutView.as_view(), name='logout'),
     path('', TemplateView.as_view(template_name='home.html'), name='home'),
     path('home/', views.home, name='home'),
+    path('dashboard/', views.dashboard, name='dashboard'),
+    path('daily/', views.daily, name='daily'),
+    path('monthly/', views.monthly, name='monthly'),
+
 ]

@@ -1,0 +1,80 @@
+{% extends "temp/layout.html" %}
+{% load static %}
+{% block content %}
+<div class="container my-5 d-flex justify-content-center">
+  <div class="card shadow-lg p-5 w-100" data-aos="fade-up" style="max-width: 900px;">
+    <h2 class="fw-bold text-center mb-4 text-primary">Monthly Attendace Record</h2>
+
+    <!-- Overview -->
+    <!-- <section data-aos="fade-right">
+      <h4 class="fw-bold">Overview</h4>
+      <p>
+        Chemical Pathology focuses on the study of biochemical processes in relation to disease.
+        Students will gain both theoretical knowledge and hands-on experience in laboratory techniques.
+      </p>
+    </section> -->
+
+    <!-- Lecture Schedule -->
+    <section class="mt-4" data-aos="fade-left">
+      <h4 class="fw-bold">Attendance Results</h4>
+      <table class="table table-bordered text-center shadow-sm">
+        <thead class="table-primary">
+          <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+        
+            <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="b-example-divider"></div>
+            </div>    
+    {% if table %}
+    <!-- Download Button -->
+
+        <div class="mt-4 d-flex gap-2 justify-content-center">
+            <!-- Download button -->
+            <a href="#" class="btn btn-success">
+                ⬇ Download Excel
+            </a>
+
+            <!-- Back button -->
+            <a href="#" class="btn btn-secondary">
+                ⬅ Back to Calendar
+            </a>
+        </div>
+        <div class="table-responsive">
+            {{ table|safe }}
+        </div>
+    
+
+    {% else %}
+        <div class="alert alert-warning text-center">
+            No report data found. Please upload your files first.
+        </div>
+        <div class="text-center mt-3">
+            <a href="#" class="btn btn-primary">
+                ⬅ Back to Calendar
+            </a>
+        </div>
+    {% endif %}
+</div>
+    </section>
+
+    <!-- Practicals -->
+    <section class="mt-4" data-aos="zoom-in">
+      <h4 class="fw-bold">Practical Sessions</h4>
+      <div class="row g-4">
+        <div class="col-md-6">
+          <div class="p-3 border rounded shadow-sm h-100 bg-light">
+            <h5 class="text-primary">Laboratory Work</h5>
+            <p>Students will engage in experiments analyzing blood and urine samples for biochemical abnormalities.</p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="p-3 border rounded shadow-sm h-100 bg-light">
+            <h5 class="text-primary">Case Studies</h5>
+            <p>Interactive discussions on clinical cases linking laboratory results with patient conditions.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+{% endblock %}

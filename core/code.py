@@ -1,0 +1,137 @@
+import pandas as pd
+
+def new_attendance(df):
+    df['number'] = range(1, len(df) + 1)
+    scor = df.loc[df['number'] > 4]
+    # Select every 3rd row
+    scores = scor.iloc[0::3].copy()
+    # Build the rename mapping for DAY columns dynamically
+    rename_dict = {}
+    for i, col in enumerate(scores.columns):
+        if i == 0:
+            rename_dict[col] = 'DAY1'
+        elif i <= 32:  # limit to DAY32
+            rename_dict[col] = f'DAY{i+1}'
+        else:
+            break
+        
+    new_score = scores.rename(columns=rename_dict)
+        
+    # Add missing DAY columns if less than 32
+    for i in range(1, 33):
+        col_name = f'DAY{i}'
+        if col_name not in new_score.columns:
+            new_score[col_name] = ""
+        
+    # Drop the helper 'number' column
+    fin = new_score.drop('number', axis=1, errors='ignore')
+    final = fin.dropna(axis=1, how='all')
+    
+    return final
+
+def extract_attendance_times(final_df, staff_names):
+    """
+    Extracts attendance times from DAY1–DAY32 columns,
+    classifies them into Resume (entry) and Exit (leave),
+    and returns two DataFrames:
+    1. daily_summary_df → detailed day-by-day counts
+    2. staff_totals_df → summarized totals per staff
+    """
+
+    # Normalize column names
+    final_df.columns = [col.strip().upper() for col in final_df.columns]
+
+    # Map each DAY column to weekday (rotates every 5 days)
+    weekday_cycle = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+    day_to_weekday = {f'DAY{i}': weekday_cycle[(i - 1) % 5] for i in range(1, 33)}
+
+    # Split strings like '11:5913:1715:3012:42...' into valid time chunks
+    def split_time_chunks(text):
+        cleaned = str(text).replace(" ", "").replace("\n", "")
+        return [
+            cleaned[i:i+5] for i in range(0, len(cleaned), 5)
+            if len(cleaned[i:i+5]) == 5 and ':' in cleaned[i:i+5]
+        ]
+
+    # Handle mismatch between staff_names and rows
+    expected_staff = len(staff_names)
+    actual_rows = len(final_df)
+    if actual_rows != expected_staff:
+        print(f"⚠️ WARNING: Mismatch between staff_names ({expected_staff}) and rows ({actual_rows}). Truncating to smaller length.")
+        min_len = min(expected_staff, actual_rows)
+        final_df = final_df.iloc[:min_len]
+        staff_names = staff_names[:min_len]
+
+    # Initialize data storage
+    summary_data = {
+        "Staff": [],
+        "Day": [],
+        "Resume Count": [],
+        "Exit Count": []
+    }
+
+    # Process each column (DAY1–DAY32)
+    for col in final_df.columns:
+        if not col.startswith("DAY"):
+            continue
+
+        weekday = day_to_weekday.get(col)
+        if weekday is None:
+            continue
+
+        for idx, cell in enumerate(final_df[col]):
+            times = split_time_chunks(cell)
+            resume_count = 0
+            exit_count = 0
+            for time in times:
+                try:
+                    hour = int(time[:2])
+                    if 7 <= hour <= 9:
+                        resume_count += 1
+                    elif 16 <= hour <= 19:
+                        exit_count += 1
+                except (ValueError, TypeError):
+                    continue
+
+            summary_data["Staff"].append(staff_names.iloc[idx] if isinstance(staff_names, pd.Series) else staff_names[idx])
+            summary_data["Day"].append(weekday)
+            summary_data["Resume Count"].append(resume_count)
+            summary_data["Exit Count"].append(exit_count)
+
+    # Convert to DataFrame
+    daily_summary_df = pd.DataFrame(summary_data)
+
+    # Aggregate per staff per weekday
+    daily_summary_df = (
+        daily_summary_df.groupby(["Staff", "Day"], as_index=False)
+        .sum()
+        .sort_values(["Staff", "Day"])
+        .reset_index(drop=True)
+    )
+
+    # ----------------------------
+    #  Compute total summary per staff
+    # ----------------------------
+    staff_totals_df = (
+        daily_summary_df.groupby("Staff", as_index=False)
+        .agg({
+            "Resume Count": "sum",
+            "Exit Count": "sum"
+        })
+    )
+
+    # staff_totals_df["Days Present"] = (
+    #     daily_summary_df.groupby("Staff", as_index=False)
+    #     .agg({"Resume Count": "sum", "Exit Count": "sum"}).apply(lambda row: max(row["Resume Count"], row["Exit Count"]), axis=1))
+    staff_totals_df["Days Present"] = staff_totals_df.apply(
+        lambda row: max(row["Resume Count"], row["Exit Count"]),
+        axis=1
+    )
+
+
+    
+
+    # Sort for readability
+    staff_totals_df = staff_totals_df.sort_values("Staff").reset_index(drop=True)
+
+    return daily_summary_df, staff_totals_df

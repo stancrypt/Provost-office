@@ -1,0 +1,58 @@
+{% extends "temp/layout.html" %}
+{% load static %}
+{% block content %}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Attendance Dashboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Attendance Dashboard</h2>
+
+    <a href="{% url 'daily' %}" class="btn btn-hero btn-lg animate-bounce">
+        <i class="bi bi-calendar-check me-2"></i>Daily Results
+      </a>
+
+    <a href="{% url 'monthly' %}" class="btn btn-hero btn-lg animate-bounce">
+        <i class="bi bi-calendar-check me-2"></i>Monthly Results
+      </a>
+
+    <!-- Error message -->
+    {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+
+    <!-- Daily Summary Table -->
+    {% if daily_table_html %}
+        <h4>Daily Summary</h4>
+        <div class="table-responsive">
+            {{ daily_table_html|safe }}
+        </div>
+    {% endif %}
+
+    <!-- Staff Totals Table -->
+    {% if totals_table_html %}
+        <h4 class="mt-4">Staff Totals</h4>
+        <div class="table-responsive">
+            {{ totals_table_html|safe }}
+        </div>
+    {% endif %}
+    
+    <!-- File Upload Form -->
+    <form method="POST" enctype="multipart/form-data" class="mt-4">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="my_record" class="form-label">Upload Attendance Excel File</label>
+            <input type="file" name="my_record" class="form-control" id="my_record" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Upload & Process</button>
+    </form>
+</div>
+</body>
+</html>
+
+{% endblock %}
