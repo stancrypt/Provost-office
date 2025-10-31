@@ -13,5 +13,7 @@ urlpatterns = [
     path('dashboard/', views.dashboard, name='dashboard'),
     path('daily/', views.daily, name='daily'),
     path('monthly/', views.monthly, name='monthly'),
+    path('download_results/', views.download_results, name='download_results'),
+    path('download_monthly_results/', views.download_monthly_results, name='download_monthly_results'),
 
 ]

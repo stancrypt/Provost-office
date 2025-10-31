@@ -1,0 +1,47 @@
+{% extends "temp/layout.html" %}
+{% load static %}
+{% block content %}
+<div class="container mt-5">
+  <h2>View Uploaded Results</h2>
+
+  <p>Enter the Month ID (e.g. <strong>2025-10</strong>) to view stored attendance results.</p>
+  <!-- <form method="get" action="{% url 'view_results' %}" class="mb-4"> -->
+    <div class="form-group">
+      <label for="month_id">Month ID</label>
+      <input type="text" name="month_id" id="month_id" class="form-control" value="{{ month_id|default:'' }}" required />
+    </div>
+    <button type="submit" class="btn btn-primary mt-2">View Results</button>
+  </form>
+
+  {% if message %}
+    <div class="alert alert-warning">{{ message }}</div>
+  {% endif %}
+
+  {% if table %}
+    <h4>Results for {{ month_id }}</h4>
+    <div class="table-responsive mt-3">
+      {{ table|safe }}
+    </div>
+  {% elif uploaded_files %}
+    <h4>All Uploaded Files</h4>
+    <table class="table table-bordered table-hover mt-3">
+      <thead>
+        <tr>
+          <th>Result ID</th>
+          <th>File</th>
+          <th>Uploaded At</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for file in uploaded_files %}
+        <tr>
+          <td>{{ file.result_id }}</td>
+          <!-- <td><a href="{% url 'view_results' %}?month_id={{ file.result_id }}" class="btn btn-sm btn-primary">View</a></td> -->
+          <td>{{ file.uploaded_at|date:"d M Y, H:i" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+</div>
+{% endblock %}

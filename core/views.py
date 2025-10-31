@@ -6,6 +6,12 @@ import pandas as pd
 from .code import new_attendance, extract_attendance_times
 import tempfile
 from django.http import HttpResponse
+import io
+import json
+import os
+import matplotlib.pyplot as plt
+import base64
+import openpyxl
 
 
 # Create your views here.
@@ -149,3 +155,67 @@ def monthly(request):
 
     table_html = report.to_html(classes="table table-bordered", index=False)
     return render(request, "temp/monthly.html", {"table": table_html})
+
+def download_results(request):
+    report_json = request.session.get("cleaned_daily")
+    print ("DEBUG: Retrieved report_json from session:", report_json)
+
+    if not report_json:
+        return HttpResponse("No results to download.", status=400)
+    from io import StringIO
+    import os
+            
+    try:
+        if isinstance(report_json, str) and os.path.exists(report_json):
+            report = pd.read_json(report_json, orient="split")
+        else:
+            report = pd.read_json(StringIO(report_json), orient="split")
+    except Exception as e:
+        print(f"Error loading B monthly report: {e}")
+        return render(request, "temp/monthly.html", {"message": f"Error loading report: {e}"})
+
+    # Save to in-memory buffer
+    buffer = io.BytesIO()
+    with pd.ExcelWriter(buffer, engine="openpyxl") as writer:
+        report.to_excel(writer, index=False, sheet_name="Daily Attendance Report")
+    buffer.seek(0)
+
+    # Send as downloadable response
+    response = HttpResponse(
+        buffer,
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+    response["Content-Disposition"] = 'attachment; filename="Daily_attendance_report.xlsx"'
+    return response
+
+def download_monthly_results(request):
+    report_json = request.session.get("cleaned_totals")
+    print ("DEBUG: Retrieved report_json from session:", report_json)
+
+    if not report_json:
+        return HttpResponse("No results to download.", status=400)
+    from io import StringIO
+    import os
+            
+    try:
+        if isinstance(report_json, str) and os.path.exists(report_json):
+            report = pd.read_json(report_json, orient="split")
+        else:
+            report = pd.read_json(StringIO(report_json), orient="split")
+    except Exception as e:
+        print(f"Error loading B monthly report: {e}")
+        return render(request, "temp/monthly.html", {"message": f"Error loading report: {e}"})
+
+    # Save to in-memory buffer
+    buffer = io.BytesIO()
+    with pd.ExcelWriter(buffer, engine="openpyxl") as writer:
+        report.to_excel(writer, index=False, sheet_name="Monthly Attendance Report")
+    buffer.seek(0)
+
+    # Send as downloadable response
+    response = HttpResponse(
+        buffer,
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+    response["Content-Disposition"] = 'attachment; filename="Montly_attendance_report.xlsx"'
+    return response

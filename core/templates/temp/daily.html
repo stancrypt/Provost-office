@@ -30,13 +30,13 @@
 
         <div class="mt-4 d-flex gap-2 justify-content-center">
             <!-- Download button -->
-            <a href="#" class="btn btn-success">
+            <a href="{% url 'download_results' %}" class="btn btn-success">
                 ⬇ Download Excel
             </a>
 
             <!-- Back button -->
-            <a href="#" class="btn btn-secondary">
-                ⬅ Back to Calendar
+            <a href="{%url 'dashboard' %}" class="btn btn-secondary">
+                ⬅ Back to Dashboard
             </a>
         </div>
         <div class="table-responsive">
